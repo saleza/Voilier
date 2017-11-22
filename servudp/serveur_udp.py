@@ -35,6 +35,6 @@ while True:
     sock.sendto(trameretour, (addr[0], addr[1]))
     print '---------Message recu---------'
     print "ID :", data[0]
-    print "Longueur du datagram :", data[1]
+    print "Taille :", data[1]
     print "Safran :", data[2]
     print "GV :", data[3]
