@@ -7,8 +7,8 @@ class VoilierClient:
         self.ipserv = ""
         self.port = 0
         self.ID = 0
-        self.safran = 0
-        self.GV = 0
+        self.valSF = 0
+        self.valGV = 0
         self.gite = 0
         self.latitude = 0 
         self.longitude = 0 
@@ -22,11 +22,13 @@ class VoilierClient:
         
         self.sock=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    def trx(self):
-        
-        self.trame = bytearray([self.ID, 4, self.safran, self.GV])
+    def txrx(self, valSF, valGV):
+
+        self.valSF = valSF
+        self.valGV = valGV
+        self.trame = bytearray([self.ID, 2, self.valSF, self.valGV])
         self.sock.sendto(self.trame, (self.ipserv, self.port))
-        self.data, server = self.sock.recvfrom(13)
+        self.data, server = self.sock.recvfrom(30)
         self.trameretour = bytearray(self.data)
 
         lat3 = float(self.trameretour[5] << 24)
@@ -58,10 +60,3 @@ class VoilierClient:
         print "Latitude :", self.latitude
         print "Longitude :", self.longitude
 
-   
-#testvoilier = VoilierClient()
-#testvoilier.initCom("127.0.0.1",6423)
-#testvoilier.ID = 1
-#testvoilier.safran = 30
-#testvoilier.GV = 5
-#testvoilier.trx()

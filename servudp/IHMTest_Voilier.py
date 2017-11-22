@@ -31,6 +31,7 @@ class IHM(tk.Frame):
         self.inputIP = tk.Entry(self,textvariable="127.0.0.1", width=15)
         self.inputPort = tk.Entry(self, textvariable="5005", width=5)
         self.boutonConnect = tk.Button(self, text="Connect",command=self.connect)
+        self.boutonSend = tk.Button(self, text="Send", command=self.send)
         self.scaleGV = tk.Scale(self, orient=tk.HORIZONTAL, from_=0,to=180,command=self.valueGVChanged)
         self.scaleSafran = tk.Scale(self, orient=tk.HORIZONTAL, from_=0,to=180,command=self.valueSFChanged)
         self.log=tk.Text(self,height=5,bg='black',fg='white')
@@ -61,30 +62,30 @@ class IHM(tk.Frame):
         self.lbOrientVentValue.grid(row=5,column=4,sticky=tk.W)
         self.lbLatitudeValue.grid(row=6,column=4,sticky=tk.W)
         self.lbLongitudeValue.grid(row=7,column=4,sticky=tk.W)
-
-        self.log.grid(row=8,column=0,columnspan=5)
+        
+        self.boutonSend.grid(row=8,column=3, sticky=tk.W)
+        self.log.grid(row=9,column=0,columnspan=5)
 
 
     def connect(self):
+        
         self.log.insert('1.0',"Connection...\n")
         self.monVoilier.ip = self.inputIP.get()
         self.monVoilier.port = self.inputPort.get()
-        self.monVoilier.initCom(self.monVoilier.ip, self.monVoilier.port)
+        self.monVoilier.initCom(self.monVoilier.ip, int(self.monVoilier.port))
         self.log.insert('1.0', "Connection réussie... \n")
         
     def send(self):
-        if self.monVoilier.ip =="":
-            self.log.insert('1.0',"Erreur, connection impossible au serveur  \n")
-        self.monVoilier.GV = self.scaleGV.get()
-        self.monVoilier.safran = self.scaleGV.get()
-        self.monVoilier.trx()
+ 
+        self.monVoilier.valGV = self.scaleGV.get()
+        self.monVoilier.valSF = self.scaleSafran.get()
+        self.monVoilier.txrx(self.monVoilier.valGV, self.monVoilier.valSF)
         self.lbGiteValue.configure(text=self.monVoilier.gite)
         self.lbVitVentValue.configure(text=self.monVoilier.VitVent)
         self.lbOrientVentValue.configure(text=self.monVoilier.OrientVent)
         self.lbLatitudeValue.configure(text=self.monVoilier.latitude)
-        self.lbLongitudeValue.configure(text=self.monVoilier.Longitude)
-        
-                             
+        self.lbLongitudeValue.configure(text=self.monVoilier.longitude)
+            
     def valueGVChanged(self,value):
         s=str("GV=")+value+"\n"
         self.log.insert('1.0',s)
