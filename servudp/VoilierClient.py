@@ -19,8 +19,7 @@ class VoilierClient:
 
         self.ipserv = ip
         self.port = port
-        
-        self.sock=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sock=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)     
 
     def txrx(self, valSF, valGV):
 

@@ -70,17 +70,25 @@ class IHM(tk.Frame):
 
 
     def connect(self):
-        
+
         self.log.insert('1.0',"Connection...\n")
         self.monVoilier.ip = self.inputIP.get()
-        self.monVoilier.port = int(self.inputPort.get())
-        self.monVoilier.initCom(self.monVoilier.ip, self.monVoilier.port)
-        self.log.insert('1.0', "Connection réussie... \n")
+
+        try:
+            self.monVoilier.port = int(self.inputPort.get())
+        except ValueError:
+            self.log.insert('1.0',"Erreur ! Veuillez rentrer un port valide ! \n")            
+        
+        try:
+            self.monVoilier.initCom(self.monVoilier.ip, self.monVoilier.port)
+            self.monVoilier.txrx()
+        except Exception:
+            self.log.insert('1.0',"Erreur, connexion impossible avec le serveur \n")
+        else:
+            self.log.insert('1.0', "Connection réussie... \n")
+                   
         
     def send(self):
-
-        if self.monVoilier.ip == '':
-            self.log.insert('1.0', "Erreur, non connecté au un serveur" + "\n")
  
         self.monVoilier.valGV = self.scaleGV.get()
         self.monVoilier.valSF = self.scaleSafran.get()
