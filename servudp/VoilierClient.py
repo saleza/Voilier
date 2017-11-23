@@ -12,8 +12,8 @@ class VoilierClient:
         self.gite = 0
         self.latitude = 0 
         self.longitude = 0 
-        self.VitVent = 0
-        self.OrientVent = 0
+        self.vitVent = 0
+        self.orientVent = 0
 
     def initCom(self, ip, port):                    
 
@@ -50,6 +50,10 @@ class VoilierClient:
             longi = (longi+1) * -1
 
         self.longitude = longi * 0.000001
+
+        self.gite=self.trameretour[4]
+        self.vitVent=self.trameretour[2]
+        self.orientVent=self.trameretour[3]
      
         print "-------Message renvoye------"
         print "ID :", self.trameretour[0]

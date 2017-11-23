@@ -23,13 +23,15 @@ class IHM(tk.Frame):
         self.lbOrientVent = tk.Label(self, text="Orientation vent :")
 
         #CONTROLES
+        ip_var = tk.StringVar(self,"127.0.0.1")
+        port_var = tk.StringVar(self,"6423")
         self.lbGiteValue = tk.Label(self, text="0")
         self.lbLatitudeValue = tk.Label(self, text="0")
         self.lbLongitudeValue = tk.Label(self, text="0")
         self.lbVitVentValue = tk.Label(self, text="0")
         self.lbOrientVentValue = tk.Label(self, text="0")
-        self.inputIP = tk.Entry(self,textvariable="127.0.0.1", width=15)
-        self.inputPort = tk.Entry(self, textvariable="5005", width=5)
+        self.inputIP = tk.Entry(self,textvariable=ip_var, width=15)
+        self.inputPort = tk.Entry(self, textvariable=port_var, width=5)
         self.boutonConnect = tk.Button(self, text="Connect",command=self.connect)
         self.boutonSend = tk.Button(self, text="Send", command=self.send)
         self.scaleGV = tk.Scale(self, orient=tk.HORIZONTAL, from_=0,to=180,command=self.valueGVChanged)
@@ -71,18 +73,21 @@ class IHM(tk.Frame):
         
         self.log.insert('1.0',"Connection...\n")
         self.monVoilier.ip = self.inputIP.get()
-        self.monVoilier.port = self.inputPort.get()
-        self.monVoilier.initCom(self.monVoilier.ip, int(self.monVoilier.port))
+        self.monVoilier.port = int(self.inputPort.get())
+        self.monVoilier.initCom(self.monVoilier.ip, self.monVoilier.port)
         self.log.insert('1.0', "Connection réussie... \n")
         
     def send(self):
+
+        if self.monVoilier.ip == '':
+            self.log.insert('1.0', "Erreur, non connecté au un serveur" + "\n")
  
         self.monVoilier.valGV = self.scaleGV.get()
         self.monVoilier.valSF = self.scaleSafran.get()
         self.monVoilier.txrx(self.monVoilier.valGV, self.monVoilier.valSF)
         self.lbGiteValue.configure(text=self.monVoilier.gite)
-        self.lbVitVentValue.configure(text=self.monVoilier.VitVent)
-        self.lbOrientVentValue.configure(text=self.monVoilier.OrientVent)
+        self.lbVitVentValue.configure(text=self.monVoilier.vitVent)
+        self.lbOrientVentValue.configure(text=self.monVoilier.orientVent)
         self.lbLatitudeValue.configure(text=self.monVoilier.latitude)
         self.lbLongitudeValue.configure(text=self.monVoilier.longitude)
             
